@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "BoolState.h"
+#include "Reactables/BoolState.h"
 
 bool UBoolState::GetState() { return _value; }
 

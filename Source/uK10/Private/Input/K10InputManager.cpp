@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "K10InputManager.h"
+#include "Input/K10InputManager.h"
 
 
 UK10InputManager* UK10InputManager::_instance = nullptr;
