@@ -8,6 +8,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AK10CharacterBase::AK10CharacterBase()
@@ -15,6 +17,8 @@ AK10CharacterBase::AK10CharacterBase()
 	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor()"));
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
+	_timeCounter = 0;
 
 	_baseTurnRate = 45.f;
 	_baseLookUpRate = 45.f;
@@ -47,14 +51,14 @@ void AK10CharacterBase::BeginPlay()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::BeginPlay()"));
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
-void AK10CharacterBase::Tick(float DeltaTime)
+void AK10CharacterBase::Tick(float deltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(deltaTime);
 
+	_timeCounter += deltaTime;
 }
 
 // Called to bind functionality to input
@@ -78,18 +82,21 @@ void AK10CharacterBase::SetupPlayerInputComponent(UInputComponent* playerInputCo
 
 void AK10CharacterBase::TurnAtRate(float rate)
 {
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::TurnAtRate( %f ) @ %fs"), rate, _timeCounter );
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(rate * _baseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AK10CharacterBase::LookUpAtRate(float rate)
 {
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::LookUpAtRate( %f ) @ %fs"), rate, _timeCounter );
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(rate * _baseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
 void AK10CharacterBase::MoveForward(float value)
 {
+	// if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveForward( %f ) @ %fs"), value, _timeCounter );
 	if ((Controller != NULL) && (value != 0.0f))
 	{
 		// find out which way is forward
@@ -104,6 +111,7 @@ void AK10CharacterBase::MoveForward(float value)
 
 void AK10CharacterBase::MoveRight(float value)
 {
+	// if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveRight( %f ) @ %fs"), value, _timeCounter );
 	if ( (Controller != NULL) && (value != 0.0f) )
 	{
 		// find out which way is right
