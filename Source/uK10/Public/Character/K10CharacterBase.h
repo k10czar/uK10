@@ -4,12 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Character/K10CharacterMovementComponent.h"
 #include "K10CharacterBase.generated.h"
 
 UCLASS()
 class UK10_API AK10CharacterBase : public ACharacter
 {
 	GENERATED_BODY()
+
+private:
+	float _startTime;
 
 public:
 	// Sets default values for this character's properties
@@ -64,7 +68,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return _cameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return _followCamera; }
+	/** Returns time since Start **/
+	// FORCEINLINE float GetTimeSinceStart() const { return _timeCounter; }
+	float GetTimeSinceStart();
 
-private:
-	float _timeCounter;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UK10CharacterMovementComponent* _movementComponent;
 };
