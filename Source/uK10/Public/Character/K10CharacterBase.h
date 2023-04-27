@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Character/K10CharacterMovementComponent.h"
+#include "Character/CharacterMovementAdapter.h"
 #include "K10CharacterBase.generated.h"
 
 UCLASS()
@@ -28,6 +28,10 @@ public:
 	float _baseLookUpRate;
 
 protected:
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Components, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	UCharacterMovementAdapter* _movementAdapter;
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* _cameraBoom;
@@ -71,7 +75,4 @@ public:
 	/** Returns time since Start **/
 	// FORCEINLINE float GetTimeSinceStart() const { return _timeCounter; }
 	float GetTimeSinceStart();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UK10CharacterMovementComponent* _movementAdapter;
 };

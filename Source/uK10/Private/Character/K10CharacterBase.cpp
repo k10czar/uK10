@@ -30,7 +30,7 @@ AK10CharacterBase::AK10CharacterBase()
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
-	GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->AirControl = 0.5f;
 	
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	_cameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -43,7 +43,9 @@ AK10CharacterBase::AK10CharacterBase()
 	_followCamera->SetupAttachment(_cameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	_followCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
-	_movementAdapter = CreateDefaultSubobject<UK10CharacterMovementComponent>( TEXT( "MovementComponent" ) );
+	_movementAdapter = CreateDefaultSubobject<UCharacterMovementAdapter>( TEXT( "MovementAdapter" ) );
+
+	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _movementAdapter = %s"), ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 }
 
 float AK10CharacterBase::GetTimeSinceStart() { return FPlatformTime::Seconds() - _startTime; }
@@ -75,7 +77,6 @@ void AK10CharacterBase::SetupPlayerInputComponent(UInputComponent* playerInputCo
 	playerInputComponent->BindAxis("MoveForward", this, &AK10CharacterBase::MoveForward);
 	playerInputComponent->BindAxis("MoveRight", this, &AK10CharacterBase::MoveRight);
 	
-	
 	playerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	playerInputComponent->BindAxis("TurnRate", this, &AK10CharacterBase::TurnAtRate);
 	playerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
@@ -98,38 +99,17 @@ void AK10CharacterBase::LookUpAtRate(float rate)
 
 void AK10CharacterBase::MoveForward(float value)
 {
+	// if( FMath::Abs( value ) > SMALL_NUMBER ) 
+	// 	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::MoveForward( %f ) _movementAdapter = %s"), value, ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 	if( _movementAdapter == nullptr ) return;
 	_movementAdapter->MoveForward( value );
-
-	// // if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// if ((Controller != NULL) && (value != 0.0f))
-	// {
-	// 	// find out which way is forward
-	// 	const FRotator Rotation = Controller->GetControlRotation();
-	// 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-
-	// 	// get forward vector
-	// 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	// 	AddMovementInput(Direction, value);
-	// }
 }
 
 void AK10CharacterBase::MoveRight(float value)
 {
+	// if( FMath::Abs( value ) > SMALL_NUMBER ) 
+	// 	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::MoveRight( %f ) _movementAdapter = %s"), value, ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 	if( _movementAdapter == nullptr ) return;
 	_movementAdapter->MoveRight( value );
-
-	// // if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// if ( (Controller != NULL) && (value != 0.0f) )
-	// {
-	// 	// find out which way is right
-	// 	const FRotator Rotation = Controller->GetControlRotation();
-	// 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
-	// 	// get right vector 
-	// 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	// 	// add movement in that direction
-	// 	AddMovementInput(Direction, value);
-	// }
 }
 
