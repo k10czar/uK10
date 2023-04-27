@@ -73,5 +73,5 @@ public:
 	float GetTimeSinceStart();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UK10CharacterMovementComponent* _movementComponent;
+	UK10CharacterMovementComponent* _movementAdapter;
 };

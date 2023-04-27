@@ -43,8 +43,7 @@ AK10CharacterBase::AK10CharacterBase()
 	_followCamera->SetupAttachment(_cameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	_followCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 	
-	_movementComponent = nullptr;
-	_movementComponent = CreateDefaultSubobject<UK10CharacterMovementComponent>( TEXT( "MovementComponent" ) );
+	_movementAdapter = CreateDefaultSubobject<UK10CharacterMovementComponent>( TEXT( "MovementComponent" ) );
 }
 
 float AK10CharacterBase::GetTimeSinceStart() { return FPlatformTime::Seconds() - _startTime; }
@@ -99,8 +98,8 @@ void AK10CharacterBase::LookUpAtRate(float rate)
 
 void AK10CharacterBase::MoveForward(float value)
 {
-	if( _movementComponent == nullptr ) return;
-	_movementComponent->MoveForward( value );
+	if( _movementAdapter == nullptr ) return;
+	_movementAdapter->MoveForward( value );
 
 	// // if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
 	// if ((Controller != NULL) && (value != 0.0f))
@@ -117,8 +116,8 @@ void AK10CharacterBase::MoveForward(float value)
 
 void AK10CharacterBase::MoveRight(float value)
 {
-	if( _movementComponent == nullptr ) return;
-	_movementComponent->MoveRight( value );
+	if( _movementAdapter == nullptr ) return;
+	_movementAdapter->MoveRight( value );
 
 	// // if( FMath::Abs( value ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
 	// if ( (Controller != NULL) && (value != 0.0f) )

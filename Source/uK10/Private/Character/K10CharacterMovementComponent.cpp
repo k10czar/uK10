@@ -38,80 +38,80 @@ void UK10CharacterMovementComponent::TickComponent( float DeltaTime, ELevelTick 
 
 void UK10CharacterMovementComponent::MoveForward( float value )
 {
-	// auto owner = GetOwner();
+	auto owner = GetOwner();
 	
-	// if( owner == nullptr )
-	// {
-	// 	UE_LOG(LogTemp, Error, TEXT("Fail to GetOwner() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// 	return;
-	// }
+	if( owner == nullptr )
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to GetOwner() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 
-	// auto controller = owner->GetInstigatorController();
+	auto controller = owner->GetInstigatorController();
 	
-	// if( controller == nullptr )
-	// {
-	// 	UE_LOG(LogTemp, Error, TEXT("Fail to GetInstigatorController() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// 	return;
-	// }
+	if( controller == nullptr )
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to GetInstigatorController() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 
-	// auto pawn = Cast<APawn>( owner );
+	auto pawn = Cast<APawn>( owner );
 	
-	// if( pawn == nullptr ) 
-	// {
-	// 	UE_LOG(LogTemp, Error, TEXT("Fail to Cast actor to Pawn() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// 	return;
-	// }
+	if( pawn == nullptr ) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to Cast actor to Pawn() UK10CharacterMovementComponent::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 	
-	// if ((controller != NULL) && (value != 0.0f))
-	// {
-	// 	// UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
-	// 	// find out which way is forward
-	// 	const FRotator Rotation = controller->GetControlRotation();
-	// 	const FRotator YawRotation(0, Rotation.Yaw, 0);
+	if ((controller != NULL) && (value != 0.0f))
+	{
+		// UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveForward( %f ) @ %fs"), value, GetTimeSinceStart() );
+		// find out which way is forward
+		const FRotator Rotation = controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-	// 	// get forward vector
-	// 	const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	// 	pawn->AddMovementInput(Direction, value);
-	// }
+		// get forward vector
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		pawn->AddMovementInput(Direction, value);
+	}
 }
 
 void UK10CharacterMovementComponent::MoveRight( float value )
 {
-// 	auto owner = GetOwner();
+	auto owner = GetOwner();
 
-// 	if( owner == nullptr )
-// 	{
-// 		UE_LOG(LogTemp, Error, TEXT("Fail to GetOwner() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
-// 		return;
-// 	}
+	if( owner == nullptr )
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to GetOwner() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 
-// 	auto controller = owner->GetInstigatorController();
+	auto controller = owner->GetInstigatorController();
 	
-// 	if( controller == nullptr ) 
-// 	{
-// 		UE_LOG(LogTemp, Error, TEXT("Fail to GetInstigatorController() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
-// 		return;
-// 	}
+	if( controller == nullptr ) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to GetInstigatorController() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 
-// 	auto pawn = Cast<APawn>( owner );
+	auto pawn = Cast<APawn>( owner );
 	
-// 	if( pawn == nullptr ) 
-// 	{
-// 		UE_LOG(LogTemp, Error, TEXT("Fail to Cast actor to Pawn() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
-// 		return;
-// 	}
+	if( pawn == nullptr ) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Fail to Cast actor to Pawn() UK10CharacterMovementComponent::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
+		return;
+	}
 
-// 	if ( (controller != NULL) && (value != 0.0f) )
-// 	{
-// 		// UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
-// 		// find out which way is right
-// 		const FRotator Rotation = controller->GetControlRotation();
-// 		const FRotator YawRotation(0, Rotation.Yaw, 0);
+	if ( (controller != NULL) && (value != 0.0f) )
+	{
+		// UE_LOG(LogTemp, Display, TEXT("AK10CharacterBase::MoveRight( %f ) @ %fs"), value, GetTimeSinceStart() );
+		// find out which way is right
+		const FRotator Rotation = controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
 	
-// 		// get right vector 
-// 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-// 		// add movement in that direction
-// 		pawn->AddMovementInput(Direction, value);
-// 	}
+		// get right vector 
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		// add movement in that direction
+		pawn->AddMovementInput(Direction, value);
+	}
 }
 
