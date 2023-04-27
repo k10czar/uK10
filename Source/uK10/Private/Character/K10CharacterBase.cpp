@@ -2,13 +2,11 @@
 
 
 #include "Character/K10CharacterBase.h"
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Character/Components/ActorCameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
-#include "Character/K10CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 
 
 // Sets default values
@@ -32,20 +30,12 @@ AK10CharacterBase::AK10CharacterBase()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.5f;
 	
-	// Create a camera boom (pulls in towards the player if there is a collision)
-	_cameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	_cameraBoom->SetupAttachment(RootComponent);
-	_cameraBoom->TargetArmLength = 300.0f; // The camera follows at this distance behind the character	
-	_cameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
-	// Create a follow camera
-	_followCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	_followCamera->SetupAttachment(_cameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	_followCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	
 	_movementAdapter = CreateDefaultSubobject<UCharacterMovementAdapter>( TEXT( "MovementAdapter" ) );
+	_actorCameraComponent = CreateDefaultSubobject<UActorCameraComponent>( TEXT( "ActorCameraComponent" ) );
 
-	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _movementAdapter = %s"), ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
+	// _actorCameraComponent->Setup( RootComponent );
+
+	// UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _movementAdapter = %s"), ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 }
 
 float AK10CharacterBase::GetTimeSinceStart() { return FPlatformTime::Seconds() - _startTime; }
