@@ -27,6 +27,11 @@ protected:
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* _followCamera;
+	
+	void PrintHierarchy();
+	
+	void ParentComponentsToOwner();
+	void ParentComponents( USceneComponent * rootComponent );
 
 public:	
 	// Called every frame

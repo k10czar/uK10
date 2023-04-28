@@ -34,8 +34,12 @@ AK10CharacterBase::AK10CharacterBase()
 	_actorCameraComponent = CreateDefaultSubobject<UActorCameraComponent>( TEXT( "ActorCameraComponent" ) );
 
 	// _actorCameraComponent->Setup( RootComponent );
+	
+	auto rootName = RootComponent->GetAttachSocketName();
+	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() RootComponent = %s / %s"), *rootName.ToString(), *RootComponent->GetClass()->GetName() );
 
 	// UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _movementAdapter = %s"), ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
+	// UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _actorCameraComponent = %s"), ( _actorCameraComponent != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 }
 
 float AK10CharacterBase::GetTimeSinceStart() { return FPlatformTime::Seconds() - _startTime; }
