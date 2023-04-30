@@ -7,7 +7,7 @@ AK10PlayerCameraManager::AK10PlayerCameraManager()
 {
 	UE_LOG(LogTemp, Warning, TEXT("AK10PlayerCameraManager::ctor()") );
 	// DefaultFOV = 90.f;
-	ZoomedFOV = 60.f;
+	_cameraCloserFOV = 120.f;
 	_cameraDefaultDistance = 450.f;
 	_cameraCloserDistance = 150.f;
 	_currentDistance = _cameraDefaultDistance;
@@ -43,21 +43,28 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
     auto pitch = rotation.Pitch;
     auto a = _cameraDefaultDistance;
     auto b = _cameraCloserDistance;
-    if( pitch < 180 )
+    auto fov = DefaultFOV;
+    if( pitch < 180 ) // Elipse radius formula for distance when camera looking up
     {
         auto radAng = FMath::DegreesToRadians( pitch ); // * PI / 180;
         auto bCos = b * FMath::Cos( radAng );
         auto aSin = a * FMath::Sin( radAng );
         _currentDistance = a * b / ( FMath::Sqrt( bCos * bCos + aSin * aSin ) );
+
+        auto diff = ( b - a );
+        auto lerpValue = FMath::Abs( pitch - 90 ) / 90;
+        fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue );
+
+        GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f diff:%f fov:%f"), lerpValue, diff, fov ) );
     } 
 
     auto pawnOffsetedOrigin = pawnLocation + _defaultTargetOffset;
 	auto focusPoint = pawnOffsetedOrigin + rotation.RotateVector( _rotatedTargetOffset );
 	FVector location = focusPoint - ( rotation.Vector() * _currentDistance );
 
-    // GEngine->AddOnScreenDebugMessage( 1, 5.f, FColor::Yellow, FString::Printf( TEXT("rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f"), *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance ) );
+    // GEngine->AddOnScreenDebugMessage( 98798, 5.f, FColor::Yellow, FString::Printf( TEXT("rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f"), *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance ) );
 
-    if( _logValuesToConsole ) GEngine->AddOnScreenDebugMessage( 1, 5.f, FColor::Yellow, FString::Printf( TEXT("location:%s pawnLocation:%s focusPoint:%s distance:%f"), *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance ) );
+    if( _logValuesToConsole ) GEngine->AddOnScreenDebugMessage( 16542, 5.f, FColor::Yellow, FString::Printf( TEXT("location:%s pawnLocation:%s focusPoint:%s distance:%f"), *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance ) );
 
     if( _drawGizmos )
     {
@@ -96,6 +103,7 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
         if( _drawGizmos ) DrawDebugLine(GetWorld(), location, focusPoint, FColor::Green, false, -1, 0, 5.0f);
     }
 
+	outVT.POV.FOV = fov;
 	outVT.POV.Location = location;
     outVT.POV.Rotation = rotation;
 }

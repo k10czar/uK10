@@ -27,7 +27,7 @@ protected:
 	FVector _rotatedTargetOffset;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float ZoomedFOV;
+	float _cameraCloserFOV;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float _cameraDefaultDistance;
