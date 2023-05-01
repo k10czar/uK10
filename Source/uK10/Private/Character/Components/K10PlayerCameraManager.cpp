@@ -33,29 +33,24 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
 	
 	auto pawnLocation = pawn->GetActorLocation();
 	// Calculate the camera position and rotation
-	_currentDistance = _cameraDefaultDistance;
 	auto pawnRotation = pawn->GetActorRotation();
 	auto rotation = pawnRotation;
 	
 	auto controller = pawn->GetInstigatorController();
 	if( controller != nullptr ) rotation = controller->GetControlRotation();
 
-    auto pitch = rotation.Pitch;
-    auto a = _cameraDefaultDistance;
-    auto b = _cameraCloserDistance;
     auto fov = DefaultFOV;
+	_currentDistance = _cameraDefaultDistance;
+    auto pitch = rotation.Pitch;
     if( pitch < 180 ) // Elipse radius formula for distance when camera looking up
     {
-        auto radAng = FMath::DegreesToRadians( pitch ); // * PI / 180;
-        auto bCos = b * FMath::Cos( radAng );
-        auto aSin = a * FMath::Sin( radAng );
-        _currentDistance = a * b / ( FMath::Sqrt( bCos * bCos + aSin * aSin ) );
+        _currentDistance = CalculateCameraDistance( _cameraCloserDistance, _cameraDefaultDistance, FMath::DegreesToRadians( pitch ) );
 
-        auto diff = ( b - a );
+        auto diff = ( _cameraCloserDistance - _cameraDefaultDistance );
         auto lerpValue = FMath::Abs( pitch - 90 ) / 90;
-        fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue );
+        fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue * lerpValue );
 
-        GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f diff:%f fov:%f"), lerpValue, diff, fov ) );
+        // GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f diff:%f fov:%f"), lerpValue, diff, fov ) );
     } 
 
     auto pawnOffsetedOrigin = pawnLocation + _defaultTargetOffset;
@@ -106,4 +101,11 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
 	outVT.POV.FOV = fov;
 	outVT.POV.Location = location;
     outVT.POV.Rotation = rotation;
+}
+
+float AK10PlayerCameraManager::CalculateCameraDistance( float minDist, float maxDist, float radAng )
+{
+    auto bCos = minDist * FMath::Cos( radAng );
+    auto aSin = maxDist * FMath::Sin( radAng );
+    return maxDist * minDist / ( FMath::Sqrt( bCos * bCos + aSin * aSin ) );
 }

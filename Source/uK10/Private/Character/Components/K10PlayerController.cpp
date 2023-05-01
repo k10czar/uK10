@@ -3,7 +3,7 @@
 
 #include "Character/Components/K10PlayerController.h"
 #include "Character/K10CharacterBase.h"
-#include "Character/CharacterMovementAdapter.h"
+#include "Character/Components/CharacterMovementAdapter.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"

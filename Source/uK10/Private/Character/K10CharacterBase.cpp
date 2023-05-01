@@ -6,6 +6,8 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Input/K10InputManager.h"
+#include "Log/K10Macros.h"
 
 
 // Sets default values
@@ -19,19 +21,8 @@ AK10CharacterBase::AK10CharacterBase()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
-	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
-	GetCharacterMovement()->JumpZVelocity = 600.f;
-	GetCharacterMovement()->AirControl = 0.5f;
 	
 	_movementAdapter = CreateDefaultSubobject<UCharacterMovementAdapter>( TEXT( "MovementAdapter" ) );
-	
-	auto rootName = RootComponent->GetAttachSocketName();
-	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() RootComponent = %s / %s"), *rootName.ToString(), *RootComponent->GetClass()->GetName() );
-
-	// UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::ctor() _movementAdapter = %s"), ( _movementAdapter != nullptr ) ?  TEXT( "Valid" ) : TEXT( "NULL" ) );
 }
 
 float AK10CharacterBase::GetTimeSinceStart() { return FPlatformTime::Seconds() - _startTime; }
@@ -42,6 +33,7 @@ void AK10CharacterBase::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("AK10CharacterBase::BeginPlay()"));
 	Super::BeginPlay();
 	_startTime = FPlatformTime::Seconds();
+    // K10InputManager::TeardownWidgets();
 }
 
 // Called every frame

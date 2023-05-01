@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "Character/CharacterMovementAdapter.h"
+#include "Character/Components/CharacterMovementAdapter.h"
 #include "K10CharacterBase.generated.h"
 
 UCLASS()

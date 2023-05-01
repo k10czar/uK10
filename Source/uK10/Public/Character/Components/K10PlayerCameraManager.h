@@ -18,6 +18,7 @@ public:
 	AK10PlayerCameraManager();
 	
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
+	static float CalculateCameraDistance( float minDist, float maxDist, float radAng );
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)

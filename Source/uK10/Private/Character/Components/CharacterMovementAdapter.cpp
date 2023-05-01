@@ -1,7 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Character/CharacterMovementAdapter.h"
+#include "Character/Components/CharacterMovementAdapter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Log/K10Macros.h"
+// #include "GameFramework/Character.h"
 
 // Sets default values for this component's properties
 UCharacterMovementAdapter::UCharacterMovementAdapter()
@@ -9,8 +12,31 @@ UCharacterMovementAdapter::UCharacterMovementAdapter()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+	
+	TrySetCharacterMovementData();
+}
 
-	// ...
+void UCharacterMovementAdapter::TrySetCharacterMovementData()
+{
+	auto owner = GetOwner();
+	RETURN_AND_LOG_IF_NULL( owner, "owner" )
+	
+	auto pawn = Cast<APawn>(owner);
+	RETURN_AND_LOG_IF_NULL( pawn, "pawn" )
+	pawn->bUseControllerRotationPitch = false;
+	pawn->bUseControllerRotationYaw = false;
+	pawn->bUseControllerRotationRoll = false;
+
+	RETURN_AND_LOG_IF_NULL( owner, "owner" )
+    auto character = Cast<ACharacter>(owner);
+	RETURN_AND_LOG_IF_NULL( character, "character" )
+	auto charMovement = character->GetCharacterMovement();
+	RETURN_AND_LOG_IF_NULL( charMovement, "charMovement" )
+	
+	charMovement->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	charMovement->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
+	charMovement->JumpZVelocity = 600.f;
+	charMovement->AirControl = 0.5f;
 }
 
 

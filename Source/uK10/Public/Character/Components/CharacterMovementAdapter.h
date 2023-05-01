@@ -14,6 +14,7 @@ class UK10_API UCharacterMovementAdapter : public UActorComponent
 
 private:
 	float _startTime;
+	void TrySetCharacterMovementData();
 
 public:	
 	// Sets default values for this component's properties
