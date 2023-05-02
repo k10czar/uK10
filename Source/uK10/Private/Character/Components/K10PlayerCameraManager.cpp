@@ -47,10 +47,11 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
         _currentDistance = CalculateCameraDistance( _cameraCloserDistance, _cameraDefaultDistance, FMath::DegreesToRadians( pitch ) );
 
         auto diff = ( _cameraCloserDistance - _cameraDefaultDistance );
-        auto lerpValue = FMath::Abs( pitch - 90 ) / 90;
-        fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue * lerpValue );
+        auto lerpValue = FMath::Clamp( FMath::Abs( pitch - 90 ) / 45, 0, 1 );
+        // auto lerpPowered = FMath::Sqrt( lerpValue );
+        fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue );
 
-        // GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f diff:%f fov:%f"), lerpValue, diff, fov ) );
+        // GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f lerpPowered:%f diff:%f fov:%f"), lerpValue, lerpPowered, diff, fov ) );
     } 
 
     auto pawnOffsetedOrigin = pawnLocation + _defaultTargetOffset;
