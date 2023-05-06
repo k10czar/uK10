@@ -53,7 +53,7 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
         // auto lerpPowered = FMath::Sqrt( lerpValue );
         fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue );
 
-        // DISPLAY_REPLACABLE_LOG_P4( 897964, "lerpValue:%f lerpPowered:%f diff:%f fov:%f", lerpValue, lerpPowered, diff, fov );
+        // DISPLAY_REPLACABLE_LOG( 897964, "lerpValue:%f lerpPowered:%f diff:%f fov:%f", lerpValue, lerpPowered, diff, fov );
     } 
 
     auto halfHeight = pawn->GetDefaultHalfHeight(); 
@@ -65,7 +65,7 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
         if( capsule != nullptr ) 
         {
             halfHeight = capsule->GetScaledCapsuleHalfHeight();
-           DISPLAY_REPLACABLE_LOG_P1( 651654, "currentHalfHeight:%f", halfHeight );
+           DISPLAY_REPLACABLE_LOG( 651654, "currentHalfHeight:%f", halfHeight );
         }
     }
 
@@ -76,9 +76,9 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
     DrawDebugSphere( GetWorld(), pawnOffsetedOrigin, 5, 12, FColor::Red, false, -1, -100 );
     DrawDebugSphere( GetWorld(), focusPoint, 5, 12, FColor::Red );
 
-    // DISPLAY_REPLACABLE_LOG_P4( 98798, "rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f", *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance );
+    // DISPLAY_REPLACABLE_LOG( 98798, "rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f", *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance );
 
-    if( _logValuesToConsole ) DISPLAY_REPLACABLE_LOG_P4( 16542, "location:%s pawnLocation:%s focusPoint:%s distance:%f", *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance );
+    if( _logValuesToConsole ) DISPLAY_REPLACABLE_LOG( 16542, "location:%s pawnLocation:%s focusPoint:%s distance:%f", *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance );
 
     if( _drawGizmos )
     {

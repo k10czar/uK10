@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
+#include "Log/K10Macros.h"
 
 
 AK10PlayerController::AK10PlayerController(const FObjectInitializer& ObjectInitializer)
@@ -47,7 +48,7 @@ void AK10PlayerController::SetupInputComponent()
 	Super::SetupInputComponent();
 
     auto inputComponent = InputComponent;
-	check(inputComponent);
+	RETURN_AND_LOG_IF_NULL( inputComponent, "inputComponent" )
 
 	inputComponent->BindAction("Jump", IE_Pressed, this, &AK10PlayerController::Jump);
 	inputComponent->BindAction("Jump", IE_Released, this, &AK10PlayerController::StopJumping);

@@ -36,9 +36,7 @@ private:
     class UCharacterMovementComponent* _movement;
     class UCharacterMovementAdapter* _movementAdapter;
 
-
 public:
-
 	void Crouch();
 	void StopCrouch();
 	void Jump();
