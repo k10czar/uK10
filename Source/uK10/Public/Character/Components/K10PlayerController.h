@@ -33,10 +33,14 @@ private:
     class APawn* _pawn;
     class ACharacter* _character;
     class AK10CharacterBase* _k10Char;
+    class UCharacterMovementComponent* _movement;
     class UCharacterMovementAdapter* _movementAdapter;
 
 
 public:
+
+	void Crouch();
+	void StopCrouch();
 	void Jump();
 	void StopJumping();
 	void AddControllerYawInput( float value );

@@ -27,6 +27,7 @@ void AK10PlayerController::OnPossess( class APawn* inPawn )
     _character = Cast<ACharacter>(inPawn);
     _k10Char = Cast<AK10CharacterBase>(inPawn);
 	if( _k10Char != nullptr ) _movementAdapter = _k10Char->GetMovementAdapter();
+	if( _character != nullptr ) _movement = _character->GetCharacterMovement();
 }
 
 void AK10PlayerController::OnUnPossess()
@@ -51,6 +52,9 @@ void AK10PlayerController::SetupInputComponent()
 	inputComponent->BindAction("Jump", IE_Pressed, this, &AK10PlayerController::Jump);
 	inputComponent->BindAction("Jump", IE_Released, this, &AK10PlayerController::StopJumping);
 	
+	inputComponent->BindAction("Crouch", IE_Pressed, this, &AK10PlayerController::Crouch);
+	inputComponent->BindAction("Crouch", IE_Released, this, &AK10PlayerController::StopCrouch);
+	
 	inputComponent->BindAxis("MoveForward", this, &AK10PlayerController::MoveForward);
 	inputComponent->BindAxis("MoveRight", this, &AK10PlayerController::MoveRight);
 	
@@ -72,31 +76,45 @@ void AK10PlayerController::StopJumping()
 	_character->StopJumping();
 }
 
+void AK10PlayerController::Crouch()
+{
+	if( _movement == nullptr ) return;
+	UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::Crouch() %s %s"), _movement->NavAgentProps.bCanCrouch  ?  TEXT( "bCanCrouch" ) : TEXT( "bCanNOTCrouch" ), _movement->CanEverCrouch() ?  TEXT( "CanEverCrouch" ) : TEXT( "CanNOTEverCrouch" ) );
+	
+	_movement->bWantsToCrouch = true;
+}
+
+void AK10PlayerController::StopCrouch()
+{
+	if( _movement == nullptr ) return;
+	_movement->bWantsToCrouch = false;
+}
+
 void AK10PlayerController::AddControllerYawInput( float value )
 {
 	if( _pawn == nullptr ) return;
-	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10PlayerController::AddControllerYawInput( %f ) @ %fs"), value, GetTimeSinceStart() );
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::AddControllerYawInput( %f ) @ %fs"), value, GetTimeSinceStart() );
 	_pawn->AddControllerYawInput( value );
 }
 
 void AK10PlayerController::AddControllerPitchInput( float value )
 {
 	if( _pawn == nullptr ) return;
-	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10PlayerController::AddControllerPitchInput( %f ) @ %fs"), value, GetTimeSinceStart() );
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::AddControllerPitchInput( %f ) @ %fs"), value, GetTimeSinceStart() );
 	_pawn->AddControllerPitchInput( value );
 }
 
 void AK10PlayerController::TurnAtRate(float rate)
 {
 	if( _pawn == nullptr ) return;
-	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10PlayerController::TurnAtRate( %f ) @ %fs"), rate, GetTimeSinceStart() );
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::TurnAtRate( %f ) @ %fs"), rate, GetTimeSinceStart() );
 	_pawn->AddControllerYawInput( rate * _baseTurnRate * GetWorld()->GetDeltaSeconds() );
 }
 
 void AK10PlayerController::LookUpAtRate(float rate)
 {
 	if( _pawn == nullptr ) return;
-	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Display, TEXT("AK10PlayerController::LookUpAtRate( %f ) @ %fs"), rate, GetTimeSinceStart() );
+	// if( FMath::Abs( rate ) > SMALL_NUMBER ) UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::LookUpAtRate( %f ) @ %fs"), rate, GetTimeSinceStart() );
 	_pawn->AddControllerPitchInput( rate * _baseLookUpRate * GetWorld()->GetDeltaSeconds() );
 }
 

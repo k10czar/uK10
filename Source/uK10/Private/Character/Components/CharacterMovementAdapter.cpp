@@ -37,6 +37,7 @@ void UCharacterMovementAdapter::TrySetCharacterMovementData()
 	charMovement->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	charMovement->JumpZVelocity = 600.f;
 	charMovement->AirControl = 0.5f;
+	charMovement->NavAgentProps.bCanCrouch = true;
 }
 
 

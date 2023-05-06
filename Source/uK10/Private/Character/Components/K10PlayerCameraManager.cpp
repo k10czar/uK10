@@ -2,6 +2,8 @@
 
 
 #include "Character/Components/K10PlayerCameraManager.h"
+#include "Components/CapsuleComponent.h"
+#include "DrawDebugHelpers.h"
 
 AK10PlayerCameraManager::AK10PlayerCameraManager()
 {
@@ -11,7 +13,7 @@ AK10PlayerCameraManager::AK10PlayerCameraManager()
 	_cameraDefaultDistance = 450.f;
 	_cameraCloserDistance = 150.f;
 	_currentDistance = _cameraDefaultDistance;
-	_defaultTargetOffset = FVector( 0, 0, 60 );
+	_defaultTargetOffset = FVector( 0, 0, 148 );
 	_rotatedTargetOffset = FVector( 0, 40, 40 );
 	_checkCameraBlock = true;
 	_hitSafeOffset = 15.f;
@@ -51,16 +53,32 @@ void AK10PlayerCameraManager::UpdateViewTarget(FTViewTarget& outVT, float deltaT
         // auto lerpPowered = FMath::Sqrt( lerpValue );
         fov = FMath::Lerp( _cameraCloserFOV, DefaultFOV, lerpValue );
 
-        // GEngine->AddOnScreenDebugMessage( 897964, 5.f, FColor::Yellow, FString::Printf( TEXT("lerpValue:%f lerpPowered:%f diff:%f fov:%f"), lerpValue, lerpPowered, diff, fov ) );
+        // DISPLAY_REPLACABLE_LOG_P4( 897964, "lerpValue:%f lerpPowered:%f diff:%f fov:%f", lerpValue, lerpPowered, diff, fov );
     } 
 
-    auto pawnOffsetedOrigin = pawnLocation + _defaultTargetOffset;
+    auto halfHeight = pawn->GetDefaultHalfHeight(); 
+
+    auto character = Cast<ACharacter>(pawn);
+    if( character != nullptr )
+    {
+        auto capsule = character->GetCapsuleComponent();
+        if( capsule != nullptr ) 
+        {
+            halfHeight = capsule->GetScaledCapsuleHalfHeight();
+           DISPLAY_REPLACABLE_LOG_P1( 651654, "currentHalfHeight:%f", halfHeight );
+        }
+    }
+
+    auto pawnOffsetedOrigin = pawnLocation + pawnRotation.RotateVector( ( FVector( 0, 0, -halfHeight ) ) + _defaultTargetOffset );
 	auto focusPoint = pawnOffsetedOrigin + rotation.RotateVector( _rotatedTargetOffset );
 	FVector location = focusPoint - ( rotation.Vector() * _currentDistance );
 
-    // GEngine->AddOnScreenDebugMessage( 98798, 5.f, FColor::Yellow, FString::Printf( TEXT("rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f"), *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance ) );
+    DrawDebugSphere( GetWorld(), pawnOffsetedOrigin, 5, 12, FColor::Red, false, -1, -100 );
+    DrawDebugSphere( GetWorld(), focusPoint, 5, 12, FColor::Red );
 
-    if( _logValuesToConsole ) GEngine->AddOnScreenDebugMessage( 16542, 5.f, FColor::Yellow, FString::Printf( TEXT("location:%s pawnLocation:%s focusPoint:%s distance:%f"), *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance ) );
+    // DISPLAY_REPLACABLE_LOG_P4( 98798, "rotation:%s rotation.Vector:%s rotation.Pitch:%f _currentDistance:%f", *rotation.ToString(), *rotation.Vector().ToString(), pitch, _currentDistance );
+
+    if( _logValuesToConsole ) DISPLAY_REPLACABLE_LOG_P4( 16542, "location:%s pawnLocation:%s focusPoint:%s distance:%f", *pawnLocation.ToString(), *location.ToString(), *focusPoint.ToString(), _currentDistance );
 
     if( _drawGizmos )
     {
