@@ -9,13 +9,15 @@
 
 void UK10AnimInstance::NativeInitializeAnimation()
 {
+	DISPLAY_AND_CONSOLE_LOG( "UK10AnimInstance::NativeInitializeAnimation()" )
     Super::NativeInitializeAnimation();
     _character = Cast<AK10CharacterBase>(TryGetPawnOwner());
 }
 
-void UK10AnimInstance::NativeUpdateAnimation(float DeltaTime)
+void UK10AnimInstance::NativeUpdateAnimation(float deltaTime)
 {
-    Super::NativeUpdateAnimation(DeltaTime);
+	DISPLAY_AND_CONSOLE_LOG( "UK10AnimInstance::NativeInitializeAnimation( %f )", deltaTime )
+    Super::NativeUpdateAnimation(deltaTime);
 
     if (!_character) return;
 
@@ -31,13 +33,13 @@ void UK10AnimInstance::NativeUpdateAnimation(float DeltaTime)
     FRotator AimRotation = _character->GetBaseAimRotation();
     FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(_character->GetVelocity());
     FRotator DeltaRot = UKismetMathLibrary::NormalizedDeltaRotator(MovementRotation, AimRotation);
-    DeltaRotation = FMath::RInterpTo(DeltaRotation, DeltaRot, DeltaTime, 6.f);
+    DeltaRotation = FMath::RInterpTo(DeltaRotation, DeltaRot, deltaTime, 6.f);
     YawOffset = DeltaRotation.Yaw;
 
     CharacterRotationLastFrame = CharacterRotation;
     CharacterRotation = _character->GetActorRotation();
     const FRotator Delta = UKismetMathLibrary::NormalizedDeltaRotator(CharacterRotation, CharacterRotationLastFrame);
-    const float Target = Delta.Yaw / DeltaTime;
-    const float Interp = FMath::FInterpTo(Lean, Target, DeltaTime, 6.f);
+    const float Target = Delta.Yaw / deltaTime;
+    const float Interp = FMath::FInterpTo(Lean, Target, deltaTime, 6.f);
     Lean = FMath::Clamp(Interp, -90.f, 90.f);
 }
