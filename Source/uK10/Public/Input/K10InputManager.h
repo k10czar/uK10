@@ -18,7 +18,7 @@ public:
     UFUNCTION(BlueprintCallable)
     static UK10InputManager* GetInstance();
 
-    static void SetWidget( UUserWidget* widget );
+    // static void SetWidget( UUserWidget* widget );
     static void TeardownWidgets();
 
 private:

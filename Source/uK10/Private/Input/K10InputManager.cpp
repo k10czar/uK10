@@ -3,7 +3,6 @@
 
 #include "Input/K10InputManager.h"
 #include "Log/K10Macros.h"
-#include "Blueprint/UserWidget.h"
 #include "UObject/Object.h"
 
 
@@ -19,25 +18,25 @@ UK10InputManager* UK10InputManager::GetInstance()
     return _instance;
 }
 
-void UK10InputManager::SetWidget( UUserWidget* widget )
-{
-	UE_LOG(LogTemp, Warning, TEXT("UK10InputManager::SetWidget( %s )"), *widget->GetFullName() );
-	// this->AddToViewport();
+// void UK10InputManager::SetWidget( UUserWidget* widget )
+// {
+// 	UE_LOG(LogTemp, Warning, TEXT("UK10InputManager::SetWidget( %s )"), *widget->GetFullName() );
+// 	// this->AddToViewport();
 
-	// UWorld* World = UObject::GetWorld();
-	// if (!ensure(World != nullptr)) return;
+// 	// UWorld* World = UObject::GetWorld();
+// 	// if (!ensure(World != nullptr)) return;
 
-	// APlayerController* PlayerController = World->GetFirstPlayerController();
-	// if (!ensure(PlayerController != nullptr)) return;
+// 	// APlayerController* PlayerController = World->GetFirstPlayerController();
+// 	// if (!ensure(PlayerController != nullptr)) return;
 
-	// FInputModeUIOnly InputModeData;
-	// InputModeData.SetWidgetToFocus( widget->TakeWidget() );
-	// InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+// 	// FInputModeUIOnly InputModeData;
+// 	// InputModeData.SetWidgetToFocus( widget->TakeWidget() );
+// 	// InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 
-	// PlayerController->SetInputMode(InputModeData);
+// 	// PlayerController->SetInputMode(InputModeData);
 
-	// PlayerController->bShowMouseCursor = true;
-}
+// 	// PlayerController->bShowMouseCursor = true;
+// }
 
 void UK10InputManager::TeardownWidgets()
 {
