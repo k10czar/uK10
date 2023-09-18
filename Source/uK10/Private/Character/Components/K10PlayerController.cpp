@@ -8,6 +8,11 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/Pawn.h"
 #include "Log/K10Macros.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "InputActionValue.h"
+#include "GameFramework/PlayerController.h"
 
 
 AK10PlayerController::AK10PlayerController(const FObjectInitializer& ObjectInitializer)
@@ -29,6 +34,15 @@ void AK10PlayerController::OnPossess( class APawn* inPawn )
     _k10Char = Cast<AK10CharacterBase>(inPawn);
 	if( _k10Char != nullptr ) _movementAdapter = _k10Char->GetMovementAdapter();
 	if( _character != nullptr ) _movement = _character->GetCharacterMovement();
+
+	auto localPlayer = Cast<ULocalPlayer>(_character);
+	RETURN_AND_LOG_IF_NULL( localPlayer, "localPlayer" )
+
+	auto subsystem = localPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+    subsystem->ClearAllMappings();
+    if( _inputMapping != nullptr ) subsystem->AddMappingContext( _inputMapping, 0 );
+	// Bind the actions
+
 }
 
 void AK10PlayerController::OnUnPossess()
@@ -56,13 +70,37 @@ void AK10PlayerController::SetupInputComponent()
 	inputComponent->BindAction("Crouch", IE_Pressed, this, &AK10PlayerController::Crouch);
 	inputComponent->BindAction("Crouch", IE_Released, this, &AK10PlayerController::StopCrouch);
 	
-	inputComponent->BindAxis("MoveForward", this, &AK10PlayerController::MoveForward);
-	inputComponent->BindAxis("MoveRight", this, &AK10PlayerController::MoveRight);
+	// inputComponent->BindAxis("MoveForward", this, &AK10PlayerController::MoveForward);
+	// inputComponent->BindAxis("MoveRight", this, &AK10PlayerController::MoveRight);
 	
-	inputComponent->BindAxis("Turn", this, &AK10PlayerController::AddControllerYawInput);
-	inputComponent->BindAxis("TurnRate", this, &AK10PlayerController::TurnAtRate);
-	inputComponent->BindAxis("LookUp", this, &AK10PlayerController::AddControllerPitchInput);
-	inputComponent->BindAxis("LookUpRate", this, &AK10PlayerController::LookUpAtRate);
+	// inputComponent->BindAxis("Turn", this, &AK10PlayerController::AddControllerYawInput);
+	// inputComponent->BindAxis("TurnRate", this, &AK10PlayerController::TurnAtRate);
+	// inputComponent->BindAxis("LookUp", this, &AK10PlayerController::AddControllerPitchInput);
+	// inputComponent->BindAxis("LookUpRate", this, &AK10PlayerController::LookUpAtRate);
+	
+	auto enhancedInput = Cast<UEnhancedInputComponent>(inputComponent);
+	RETURN_AND_LOG_IF_NULL( enhancedInput, "enhancedInput" )
+
+	if( _moveAction ) enhancedInput->BindAction( _moveAction, ETriggerEvent::Triggered, this, &AK10PlayerController::Move );
+	if( _lookAction ) enhancedInput->BindAction( _lookAction, ETriggerEvent::Triggered, this, &AK10PlayerController::Look );
+}
+ 
+void AK10PlayerController::Move( const FInputActionValue& value )
+{
+	if( _movementAdapter == nullptr ) return;
+    const FVector2D moveValue = value.Get<FVector2D>();
+	UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::Move( %s )"), *moveValue.ToString() );
+	_movementAdapter->MoveForward( moveValue.Y );
+	_movementAdapter->MoveRight( moveValue.X );
+}
+ 
+void AK10PlayerController::Look( const FInputActionValue& value )
+{
+	if( _pawn == nullptr ) return;
+    const FVector2D lookValue = value.Get<FVector2D>();
+	UE_LOG(LogTemp, Warning, TEXT("AK10PlayerController::Look( %s )"), *lookValue.ToString() );
+	_pawn->AddControllerYawInput( lookValue.X );
+	_pawn->AddControllerPitchInput( lookValue.Y );
 }
 
 void AK10PlayerController::Jump()

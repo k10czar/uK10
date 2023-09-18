@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "InputActionValue.h"
 #include "K10PlayerController.generated.h"
 
 /**
@@ -29,6 +30,17 @@ public:
 	virtual void OnPossess( class APawn* inPawn ) override;
 	virtual void OnUnPossess() override;
 
+protected:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+    class UInputMappingContext* _inputMapping;
+
+public:
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    class UInputAction* _moveAction;
+ 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+    class UInputAction* _lookAction;
+
 private:
     class APawn* _pawn;
     class ACharacter* _character;
@@ -47,4 +59,6 @@ public:
 	void LookUpAtRate(float rate);
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void Move( const FInputActionValue& value );
+	void Look( const FInputActionValue& Value);
 };

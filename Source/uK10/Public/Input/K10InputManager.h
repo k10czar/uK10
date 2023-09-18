@@ -21,6 +21,9 @@ public:
     // static void SetWidget( UUserWidget* widget );
     static void TeardownWidgets();
 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Enhanced Input")
+    class UInputMappingContext* InputMapping;
+
 private:
     static UK10InputManager* _instance;
 };
